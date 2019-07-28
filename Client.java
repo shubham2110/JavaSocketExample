@@ -7,8 +7,10 @@ public class Client
     // initialize socket and input output streams 
     private Socket socket            = null; 
     private DataInputStream  input   = null;
-    private DataInputStream  inputfromserver = null;
-    private DataOutputStream out     = null; 
+   // private DataInputStream  inputfromserver = null;
+   //private DataOutputStream out     = null; 
+    private PrintWriter out;
+    private BufferedReader in;
   
     // constructor to put ip address and port 
     public Client(String address, int port) 
@@ -23,10 +25,8 @@ public class Client
             input  = new DataInputStream(System.in); 
   
             // sends output to the socket 
-            out    = new DataOutputStream(socket.getOutputStream()); 
-		// I added this line Below .. is it okey ?yes
-		inputfromserver = new DataInputStream(socket.getInputStream());
-			// are you here ?
+            out    = new PrintWriter(socket.getOutputStream()); 
+	    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			
 			
         } 
@@ -41,7 +41,7 @@ public class Client
   
         // string to read message from input 
         String line = ""; 
-		String serverinput="";
+	String serverinput="";
         // keep reading until "Over" is input 
         while (!line.equals("Over")) 
         { 
@@ -53,11 +53,8 @@ public class Client
 			System.out.println("Got EOF, Closing COnnection");
 			break;
 		}
-                out.writeUTF(line); 
-				System.out.println("Client to receive!");
-				//serverinput= inputfromserver.readLine();
-				// Below line is supposed to print whatever is coming from server.. ok.. now i am runnign
-				System.out.println(inputfromserver.readUTF());
+                out.println(line);
+		System.out.println(in.readLine());
             } 
             catch(IOException i) 
             { 
